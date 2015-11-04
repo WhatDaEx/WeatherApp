@@ -1,0 +1,33 @@
+<section class="weather">
+    <div v-if="weather">
+        <h1>
+            <i class="wi" v-bind:class="{
+                'wi-day-cloudy': weather.currently.icon == 'partly-cloudy-day',
+                'wi-night-cloudy': weather.currently.icon == 'partly-cloudy-night',
+                'wi-day-sunny': weather.currently.icon == 'clear-day',
+                'wi-night-clear': weather.currently.icon == 'clear-night',
+                'wi-rain': weather.currently.icon == 'rain',
+                'wi-snow': weather.currently.icon == 'snow',
+                'wi-sleet': weather.currently.icon == 'sleet',
+                'wi-windy': weather.currently.icon == 'wind',
+                'wi-fog': weather.currently.icon == 'fog',
+                'wi-cloudy': weather.currently.icon == 'cloudy'
+            }"></i><br>
+        </h1>
+        <h2>
+            {{ weather.currently.summary }}
+        </h2>
+        <h4>{{ city }}</h4>
+    </div>
+    <hr>
+    <div class="row">
+        <form class="col-md-4 col-md-push-4" @submit.prevent>
+            <div class="alert alert-danger" v-show="error.show">
+                {{ error.msg }}
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Enter your address" class="form-control" v-model="city" lazy @keydown="hideError" @keyup.enter="update">
+            </div>
+        </form>
+    </div>
+</section>

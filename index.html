@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Weather App</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="forecast" content="4f9288af14b2c172d497f4538a8dfc80">
+    <meta name="google-maps" content="AIzaSyC4R-d-b1KASfmQ6NZ2YqBFB_U5GVJYyy0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="public/css/weather-icons.min.css">
+    <link rel="stylesheet" href="public/css/app.css">
 </head>
-<body id="app">
-    <h1>{{ test }}</h1>
+<body class="container text-center">
+    <h1>{{ title }}</h1>
+    <weather></weather>
 </body>
 <script src="public/js/app.js"></script>
 </html>

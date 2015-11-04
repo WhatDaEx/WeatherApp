@@ -1,9 +1,17 @@
 var Vue = require('vue');
+Vue.use(require('vue-resource'));
 
+// Main vue instance
 new Vue({
-    el: '#app',
+
+    el: 'body',
 
     data: {
-        test: 'Test'
+        title: 'Weather App'
+    },
+
+    components: {
+        weather: require('./components/Weather')
     }
+
 });

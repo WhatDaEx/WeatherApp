@@ -19,6 +19,7 @@
   "devDependencies": {
     "babel-runtime": "^5.8.29",
     "gulp": "^3.9.0",
+    "jquery": "^2.1.4",
     "laravel-elixir": "^3.4.2",
     "vue": "^1.0.4",
     "vue-hot-reload-api": "^1.2.1",
