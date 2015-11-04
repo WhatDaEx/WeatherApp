@@ -1,0 +1,29 @@
+{
+  "name": "weather-app",
+  "version": "1.0.0",
+  "description": "Example weather app using Vue and Forecast.io",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Foxted-Mentoring/WeatherApp.git"
+  },
+  "author": "Valentin Prugnaud",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Foxted-Mentoring/WeatherApp/issues"
+  },
+  "homepage": "https://github.com/Foxted-Mentoring/WeatherApp#readme",
+  "devDependencies": {
+    "babel-runtime": "^5.8.29",
+    "gulp": "^3.9.0",
+    "laravel-elixir": "^3.4.2",
+    "vue": "^1.0.4",
+    "vue-hot-reload-api": "^1.2.1",
+    "vue-resource": "^0.1.16",
+    "vueify": "^5.0.2",
+    "vueify-insert-css": "^1.0.0"
+  }
+}
