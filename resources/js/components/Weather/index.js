@@ -9,9 +9,9 @@ module.exports = {
 
     data: function () {
         return {
+            city: '',
             forecast: false,
             googleMaps: false,
-            city: '',
             weather: false,
             location: false,
             error: {
@@ -41,10 +41,6 @@ module.exports = {
 
     methods: {
         update: function () {
-            this.updateForecast();
-        },
-
-        updateForecast: function() {
             this.$http.get(this.googleUrl, function(data, status, request) {
                 if (data.results.length < 1) {
                     this.showError('No results with this address!');
