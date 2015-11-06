@@ -20364,17 +20364,95 @@ new Vue({
 
 });
 
-},{"./components/Weather":79,"vue":76,"vue-resource":4}],79:[function(require,module,exports){
+},{"./components/Weather":85,"vue":76,"vue-resource":4}],79:[function(require,module,exports){
+/**
+ * Alert component
+ * @type {{template: *, props: string[]}}
+ */
+'use strict';
+
+module.exports = {
+  template: require('./template.html'),
+  props: ['type', 'msg']
+};
+
+},{"./template.html":80}],80:[function(require,module,exports){
+module.exports = '<div class="alert" v-bind:class="type">\n    {{ msg }}\n</div>';
+},{}],81:[function(require,module,exports){
+'use strict';
+
+module.exports = {
+    template: require('./template.html'),
+    props: ['type'],
+    computed: {
+        icon: function icon() {
+            switch (this.type) {
+                case 'partly-cloudy-day':
+                    return 'wi-day-cloudy';
+                    break;
+                case 'partly-cloudy-night':
+                    return 'wi-night-cloudy';
+                    break;
+                case 'clear-day':
+                    return 'wi-day-sunny';
+                    break;
+                case 'clear-night':
+                    return 'wi-night-clear';
+                    break;
+                case 'rain':
+                    return 'wi-rain';
+                    break;
+                case 'snow':
+                    return 'wi-snow';
+                    break;
+                case 'sleet':
+                    return 'wi-sleet';
+                    break;
+                case 'fog':
+                    return 'wi-fog';
+                    break;
+                case 'cloudy':
+                    return 'wi-cloudy';
+                    break;
+                default:
+                    return 'wi-cloud';
+            }
+        }
+    }
+};
+
+},{"./template.html":82}],82:[function(require,module,exports){
+module.exports = '<i class="text-primary wi" v-bind:class="icon"></i>';
+},{}],83:[function(require,module,exports){
+/**
+ * Loader component
+ * @type {{template: *, props: string[]}}
+ */
+'use strict';
+
+module.exports = {
+  template: require('./template.html')
+};
+
+},{"./template.html":84}],84:[function(require,module,exports){
+module.exports = '<i class="fa fa-5x fa-spinner fa-spin text-primary"></i><br>';
+},{}],85:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');
 
 /**
- * @TODO Extract error to own component
- * @type {{template: *, data: module.exports.data, ready: module.exports.ready, methods: {update: module.exports.methods.update}}}
+ * Weather component
+ * @type {{template: *, components: {alert: *, loader: *}, data: module.exports.data, computed: {googleUrl: module.exports.computed.googleUrl, forecastUrl: module.exports.computed.forecastUrl, icon: module.exports.computed.icon}, ready: module.exports.ready, methods: {update: module.exports.methods.update, reset: module.exports.methods.reset}}}
  */
 module.exports = {
     template: require('./template.html'),
+
+    components: {
+        alert: require('../Alert'),
+        loader: require('../Loader'),
+        icon: require('../Icon')
+    },
 
     data: function data() {
         return {
@@ -20383,6 +20461,7 @@ module.exports = {
             googleMaps: false,
             weather: false,
             location: false,
+            loader: false,
             error: {
                 show: false,
                 msg: ''
@@ -20410,9 +20489,11 @@ module.exports = {
 
     methods: {
         update: function update() {
+            this.loader = true;
             this.$http.get(this.googleUrl, (function (data, status, request) {
                 if (data.results.length < 1) {
-                    this.showError('No results with this address!');
+                    this.error.msg = 'No results with this address!';
+                    this.error.show = true;
                     this.reset();
                     return;
                 }
@@ -20420,6 +20501,7 @@ module.exports = {
                 this.location = data.results[0].geometry.location;
                 this.$http.jsonp(this.forecastUrl, (function (data, status, request) {
                     this.weather = data;
+                    this.loader = false;
                 }).bind(this));
             }).bind(this));
         },
@@ -20427,21 +20509,11 @@ module.exports = {
         reset: function reset() {
             this.location = false;
             this.weather = false;
-        },
-
-        showError: function showError(msg) {
-            this.error.show = true;
-            this.error.msg = msg;
-        },
-
-        hideError: function hideError() {
-            this.error.show = false;
-            this.error.msg = '';
+            this.loader = false;
         }
-
     }
 };
 
-},{"./template.html":80,"jquery":1}],80:[function(require,module,exports){
-module.exports = '<section class="weather">\n    <div v-if="weather">\n        <h1>\n            <i class="wi" v-bind:class="{\n                \'wi-day-cloudy\': weather.currently.icon == \'partly-cloudy-day\',\n                \'wi-night-cloudy\': weather.currently.icon == \'partly-cloudy-night\',\n                \'wi-day-sunny\': weather.currently.icon == \'clear-day\',\n                \'wi-night-clear\': weather.currently.icon == \'clear-night\',\n                \'wi-rain\': weather.currently.icon == \'rain\',\n                \'wi-snow\': weather.currently.icon == \'snow\',\n                \'wi-sleet\': weather.currently.icon == \'sleet\',\n                \'wi-windy\': weather.currently.icon == \'wind\',\n                \'wi-fog\': weather.currently.icon == \'fog\',\n                \'wi-cloudy\': weather.currently.icon == \'cloudy\'\n            }"></i><br>\n        </h1>\n        <h2>\n            {{ weather.currently.summary }}\n        </h2>\n        <h4>{{ city }}</h4>\n    </div>\n    <hr>\n    <div class="row">\n        <form class="col-md-4 col-md-push-4" @submit.prevent>\n            <div class="alert alert-danger" v-show="error.show">\n                {{ error.msg }}\n            </div>\n            <div class="form-group">\n                <input type="text"\n                       placeholder="Enter your address"\n                       class="form-control"\n                       v-model="city" lazy\n                       @keydown="hideError"\n                       @keyup.enter="update">\n            </div>\n        </form>\n    </div>\n</section>';
+},{"../Alert":79,"../Icon":81,"../Loader":83,"./template.html":86,"jquery":1}],86:[function(require,module,exports){
+module.exports = '<section class="weather">\n    <loader v-if="loader"></loader>\n    <div v-if="!loader && weather">\n        <icon v-bind:type="weather.currently.icon"></icon>\n        <h2>{{ weather.currently.summary }}</h2>\n        <h4>{{ city }}</h4>\n    </div>\n    <hr>\n    <div class="row">\n        <form class="col-md-4 col-md-push-4" @submit.prevent>\n            <alert type="alert-danger" v-bind:msg="error.msg" v-show="error.show"></alert>\n            <div class="form-group">\n                <input type="text"\n                       placeholder="Enter your address"\n                       class="form-control"\n                       v-model="city" lazy\n                       @keydown="this.error.show = false"\n                       @keyup.enter="update">\n            </div>\n        </form>\n    </div>\n</section>';
 },{}]},{},[78]);

@@ -1,11 +1,17 @@
 var $ = require('jquery');
 
 /**
- * @TODO Extract error to own component
- * @type {{template: *, data: module.exports.data, ready: module.exports.ready, methods: {update: module.exports.methods.update}}}
+ * Weather component
+ * @type {{template: *, components: {alert: *, loader: *}, data: module.exports.data, computed: {googleUrl: module.exports.computed.googleUrl, forecastUrl: module.exports.computed.forecastUrl, icon: module.exports.computed.icon}, ready: module.exports.ready, methods: {update: module.exports.methods.update, reset: module.exports.methods.reset}}}
  */
 module.exports = {
     template: require('./template.html'),
+
+    components: {
+        alert: require('../Alert'),
+        loader: require('../Loader'),
+        icon: require('../Icon')
+    },
 
     data: function () {
         return {
@@ -14,6 +20,7 @@ module.exports = {
             googleMaps: false,
             weather: false,
             location: false,
+            loader: false,
             error: {
                 show: false,
                 msg: ''
@@ -41,9 +48,11 @@ module.exports = {
 
     methods: {
         update: function () {
+            this.loader = true;
             this.$http.get(this.googleUrl, function(data, status, request) {
                 if (data.results.length < 1) {
-                    this.showError('No results with this address!');
+                    this.error.msg = 'No results with this address!';
+                    this.error.show = true;
                     this.reset();
                     return;
                 }
@@ -51,6 +60,7 @@ module.exports = {
                 this.location = data.results[0].geometry.location;
                 this.$http.jsonp(this.forecastUrl, function(data, status, request) {
                     this.weather = data;
+                    this.loader = false;
                 }.bind(this));
             }.bind(this));
         },
@@ -58,17 +68,7 @@ module.exports = {
         reset: function() {
             this.location = false;
             this.weather = false;
-        },
-
-        showError: function (msg) {
-            this.error.show = true;
-            this.error.msg = msg;
-        },
-
-        hideError: function () {
-            this.error.show = false;
-            this.error.msg = '';
+            this.loader = false;
         }
-
     }
 }
